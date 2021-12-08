@@ -6,7 +6,6 @@ import android.util.Log
 import androidx.room.Room
 import com.farshidsj.woocertestapp.core.utils.AppPreferences
 import com.farshidsj.woocertestapp.core.utils.Constants
-import com.farshidsj.woocertestapp.core.utils.Utils
 import com.farshidsj.woocertestapp.feature_products.data.local.ProductsDatabase
 import com.farshidsj.woocertestapp.feature_products.data.remote.ProductsApi
 import com.farshidsj.woocertestapp.feature_products.data.repository.ProductsRepositoryImpl
@@ -18,10 +17,8 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.single
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -65,18 +62,25 @@ object ProductsModule {
     @Provides
     @Singleton
     fun provideOkHttpClient(appPreferences: AppPreferences): OkHttpClient {
-        var consumerKey = Utils.consumerKey
-        var consumerSecret = Utils.consumerSecret
-        var consumer = OkHttpOAuthConsumer(
-            consumerKey,
-            consumerSecret
-        )
-        return OkHttpClient.Builder()
-            .addInterceptor(SigningInterceptor(consumer))
-            .connectTimeout(120, TimeUnit.SECONDS)
-            .readTimeout(30, TimeUnit.SECONDS)
-            .writeTimeout(30, TimeUnit.SECONDS)
-            .build()
+
+        return runBlocking {
+            var consumerKey: String
+            var consumerSecret: String
+            withContext(Dispatchers.Default) {
+                consumerKey = appPreferences.getAuthForm().first().consumerKey
+                consumerSecret = appPreferences.getAuthForm().first().consumerSecret
+            }
+            val consumer = OkHttpOAuthConsumer(
+                consumerKey,
+                consumerSecret
+            )
+            return@runBlocking OkHttpClient.Builder()
+                .addInterceptor(SigningInterceptor(consumer))
+                .connectTimeout(120, TimeUnit.SECONDS)
+                .readTimeout(30, TimeUnit.SECONDS)
+                .writeTimeout(30, TimeUnit.SECONDS)
+                .build()
+        }
     }
 
     @Provides

@@ -93,7 +93,7 @@ class LoginFragment : Fragment() {
     private fun initViews() {
         setupListeners()
 
-        GlobalScope.launch(Dispatchers.IO) {
+        CoroutineScope(Dispatchers.IO).launch {
             appPreferences.getAuthForm().catch { e ->
                 e.printStackTrace()
             }.collect {
@@ -112,18 +112,18 @@ class LoginFragment : Fragment() {
 
         binding.btnProceed.setOnClickListener {
             if (checkInputs()) {
-                GlobalScope.launch(Dispatchers.IO) {
-                    appPreferences.saveAuthForm(
-                        authenticationModel = AuthenticationModel(
-                            name = nameInput,
-                            email = emailInput,
-                            consumerKey = consumerKeyInput,
-                            consumerSecret = consumerSecretInput
+                CoroutineScope(Dispatchers.IO).launch {
+                    withContext(Dispatchers.IO) {
+                        appPreferences.saveAuthForm(
+                            authenticationModel = AuthenticationModel(
+                                name = nameInput,
+                                email = emailInput,
+                                consumerKey = consumerKeyInput,
+                                consumerSecret = consumerSecretInput
+                            )
                         )
-                    )
+                    }
                 }
-                Utils.consumerKey = consumerKeyInput
-                Utils.consumerSecret = consumerSecretInput
                 findNavController().navigate(
                     R.id.action_loginFragment_to_productListFragment,
                     Bundle().apply {
