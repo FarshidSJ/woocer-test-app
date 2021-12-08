@@ -14,7 +14,7 @@ import kotlinx.coroutines.delay
 
 class SplashFragment : Fragment() {
 
-    private lateinit var _binding : FragmentSplashBinding
+    private lateinit var _binding: FragmentSplashBinding
     private lateinit var _navHostFragment: NavHostFragment
 
     override fun onCreateView(

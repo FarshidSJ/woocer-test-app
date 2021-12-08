@@ -13,7 +13,7 @@ object Utils {
         textInputLayout.error = error
     }
 
-    fun hideInputError(textInputLayout: TextInputLayout){
+    fun hideInputError(textInputLayout: TextInputLayout) {
         textInputLayout.isErrorEnabled = false
         textInputLayout.error = ""
     }

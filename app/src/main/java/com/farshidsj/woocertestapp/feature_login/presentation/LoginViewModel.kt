@@ -16,7 +16,8 @@ class LoginViewModel @Inject constructor(
     private val loginUser: LoginUser
 ) : ViewModel() {
 
-    private val _loginState = MutableStateFlow<AuthenticationModel>(AuthenticationModel("", "", "", ""))
+    private val _loginState =
+        MutableStateFlow<AuthenticationModel>(AuthenticationModel("", "", "", ""))
     val loginState: StateFlow<AuthenticationModel> = _loginState
 
     private val _eventFlow = MutableSharedFlow<UIEvent>()
@@ -38,8 +39,9 @@ class LoginViewModel @Inject constructor(
                         result.message?.let {
                             _eventFlow.emit(
                                 UIEvent.ShowSnackbar(
-                                it ?: "Unknown error"
-                            ))
+                                    it ?: "Unknown error"
+                                )
+                            )
                         }
 
                     }
@@ -51,7 +53,7 @@ class LoginViewModel @Inject constructor(
         }
 
     sealed class UIEvent {
-        data class ShowSnackbar(val message: String): UIEvent()
+        data class ShowSnackbar(val message: String) : UIEvent()
     }
 
 }

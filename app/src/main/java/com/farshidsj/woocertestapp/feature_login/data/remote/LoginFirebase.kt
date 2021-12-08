@@ -10,6 +10,9 @@ import java.lang.Exception
 
 interface LoginFirebase {
 
-    suspend fun saveUserInformation(userDto: UserDto,collectionReference: CollectionReference) : Resource<UserDto>
+    suspend fun saveUserInformation(
+        userDto: UserDto,
+        collectionReference: CollectionReference
+    ): Resource<UserDto>
 
 }

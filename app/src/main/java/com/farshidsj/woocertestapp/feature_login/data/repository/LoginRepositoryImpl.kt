@@ -15,7 +15,10 @@ class LoginRepositoryImpl
 constructor(
     private val firebaseFirestore: FirebaseFirestore
 ) : LoginRepository {
-    override fun saveUserInformation(authenticationModel: AuthenticationModel, collectionName: String): Flow<Resource<AuthenticationModel>> = flow {
+    override fun saveUserInformation(
+        authenticationModel: AuthenticationModel,
+        collectionName: String
+    ): Flow<Resource<AuthenticationModel>> = flow {
 
         emit(Resource.Loading())
         try {

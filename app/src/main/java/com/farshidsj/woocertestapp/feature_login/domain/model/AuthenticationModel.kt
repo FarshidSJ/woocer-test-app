@@ -8,7 +8,7 @@ data class AuthenticationModel(
     val consumerKey: String,
     val consumerSecret: String
 ) {
-    fun toUserDto() : UserDto {
+    fun toUserDto(): UserDto {
         return UserDto(
             name = name,
             email = email,

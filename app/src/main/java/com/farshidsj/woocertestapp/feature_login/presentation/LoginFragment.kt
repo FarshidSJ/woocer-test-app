@@ -26,7 +26,7 @@ import kotlinx.coroutines.flow.collectLatest
 @AndroidEntryPoint
 class LoginFragment : Fragment() {
 
-//    private lateinit var binding: FragmentLoginBinding
+    //    private lateinit var binding: FragmentLoginBinding
     private var _binding: FragmentLoginBinding? = null
     private val binding get() = _binding!!
     private lateinit var appPreferences: AppPreferences
@@ -58,7 +58,7 @@ class LoginFragment : Fragment() {
     private fun setupEventObserver() {
         lifecycleScope.launchWhenStarted {
             viewModel.eventFlow.collectLatest { event ->
-                when(event) {
+                when (event) {
                     is LoginViewModel.UIEvent.ShowSnackbar -> {
                         Snackbar.make(binding.root, event.message, Snackbar.LENGTH_SHORT).show()
                     }

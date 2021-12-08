@@ -24,7 +24,7 @@ object LoginModule {
 
     @Provides
     @Singleton
-    fun provideLoginFirebaseFireStore() : FirebaseFirestore {
+    fun provideLoginFirebaseFireStore(): FirebaseFirestore {
         return FirebaseFirestore.getInstance()
     }
 

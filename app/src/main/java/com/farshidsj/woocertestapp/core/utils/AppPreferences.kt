@@ -8,19 +8,19 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.createDataStore
 import com.farshidsj.woocertestapp.feature_login.domain.model.AuthenticationModel
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.single
 
 class AppPreferences(
     private val context: Context
 ) {
 
-    private val dataStore: DataStore<Preferences> by lazy { return@lazy context.createDataStore(
-        name = Constants.APP_PREFERENCES
-    ) }
+    private val dataStore: DataStore<Preferences> by lazy {
+        return@lazy context.createDataStore(
+            name = Constants.APP_PREFERENCES
+        )
+    }
 
-    companion object{
+    companion object {
         val CONSUMER_KEY = stringPreferencesKey(name = Constants.CONSUMER_KEY)
         val CONSUMER_SECRET = stringPreferencesKey(name = Constants.CONSUMER_SECRET)
         val NAME = stringPreferencesKey(name = Constants.NAME)
@@ -38,10 +38,10 @@ class AppPreferences(
 
     fun getAuthForm() = dataStore.data.map {
         AuthenticationModel(
-            name = it[NAME]?:"",
-            email = it[EMAIL]?:"",
-            consumerKey = it[CONSUMER_KEY]?:"",
-            consumerSecret = it[CONSUMER_SECRET]?:""
+            name = it[NAME] ?: "",
+            email = it[EMAIL] ?: "",
+            consumerKey = it[CONSUMER_KEY] ?: "",
+            consumerSecret = it[CONSUMER_SECRET] ?: ""
         )
     }
 

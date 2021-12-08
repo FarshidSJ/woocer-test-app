@@ -10,9 +10,12 @@ class GetProductList(
     private val repository: ProductsRepository
 ) {
 
-    operator fun invoke(consumerKey: String, consumerSecret: String): Flow<Resource<List<ProductModel>>> {
+    operator fun invoke(
+        consumerKey: String,
+        consumerSecret: String
+    ): Flow<Resource<List<ProductModel>>> {
         if (consumerKey.isBlank() || consumerSecret.isBlank()) {
-            return flow {  }
+            return flow { }
         }
         return repository.getProductList(consumerKey, consumerSecret)
     }

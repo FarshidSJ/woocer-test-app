@@ -26,9 +26,9 @@ class ProductListViewModel @Inject constructor(
     private val _eventFlow = MutableSharedFlow<UIEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
 
-    fun getProducts(consumerKey:String, consumerSecret: String) = viewModelScope.launch {
-        getProductList(consumerKey,consumerSecret).onEach { result ->
-            when(result) {
+    fun getProducts(consumerKey: String, consumerSecret: String) = viewModelScope.launch {
+        getProductList(consumerKey, consumerSecret).onEach { result ->
+            when (result) {
                 is Resource.Success -> {
                     result.data?.let {
                         _products.value = it
@@ -43,9 +43,11 @@ class ProductListViewModel @Inject constructor(
                         _products.value = it
                     }
                     result.message?.let {
-                        _eventFlow.emit(UIEvent.ShowSnackbar(
-                            it ?: "Unknown error"
-                        ))
+                        _eventFlow.emit(
+                            UIEvent.ShowSnackbar(
+                                it ?: "Unknown error"
+                            )
+                        )
                     }
                     result.showLoading?.let {
                         _showLoading.value = it
@@ -67,7 +69,7 @@ class ProductListViewModel @Inject constructor(
     }
 
     sealed class UIEvent {
-        data class ShowSnackbar(val message: String): UIEvent()
+        data class ShowSnackbar(val message: String) : UIEvent()
     }
 
 }

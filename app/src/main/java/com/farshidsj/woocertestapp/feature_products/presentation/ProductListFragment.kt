@@ -19,13 +19,13 @@ import kotlinx.coroutines.flow.collectLatest
 @AndroidEntryPoint
 class ProductListFragment : Fragment() {
 
-    private var _binding : FragmentProductListBinding? = null
+    private var _binding: FragmentProductListBinding? = null
     private val binding get() = _binding!!
     private lateinit var productListAdapter: ProductListAdapter
     private val viewModel: ProductListViewModel by viewModels()
     private lateinit var args: Bundle
     private var consumerKey = ""
-    private var consumerSecret =""
+    private var consumerSecret = ""
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -58,7 +58,7 @@ class ProductListFragment : Fragment() {
         }
         lifecycleScope.launchWhenStarted {
             viewModel.eventFlow.collectLatest { event ->
-                when(event) {
+                when (event) {
                     is ProductListViewModel.UIEvent.ShowSnackbar -> {
                         Snackbar.make(binding.root, event.message, Snackbar.LENGTH_SHORT).show()
                     }
@@ -66,6 +66,7 @@ class ProductListFragment : Fragment() {
             }
         }
     }
+
     private fun initArgs() {
         arguments?.let { args = it }
         args.getString("consumer_key")?.let {
