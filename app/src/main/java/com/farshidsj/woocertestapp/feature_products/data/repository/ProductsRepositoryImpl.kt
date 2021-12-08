@@ -33,7 +33,7 @@ constructor(
 
 
         try {
-            val remoteProducts = productsApi.getProductList(/*consumerKey, consumerSecret*/)
+            val remoteProducts = productsApi.getProductList()
 
             productsDao.deleteProducts(remoteProducts.map { it.id })
             productsDao.insertProducts(remoteProducts.map { it.toProductEntity() })

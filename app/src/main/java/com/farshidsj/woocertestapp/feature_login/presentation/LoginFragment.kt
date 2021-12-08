@@ -6,6 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.farshidsj.woocertestapp.R
 import com.farshidsj.woocertestapp.databinding.FragmentLoginBinding
@@ -13,14 +15,20 @@ import com.farshidsj.woocertestapp.feature_login.domain.model.AuthenticationMode
 import com.farshidsj.woocertestapp.core.utils.AppPreferences
 import com.farshidsj.woocertestapp.core.utils.Constants
 import com.farshidsj.woocertestapp.core.utils.Utils
+import com.farshidsj.woocertestapp.feature_products.presentation.ProductListViewModel
+import com.google.android.material.snackbar.Snackbar
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
 
+@AndroidEntryPoint
 class LoginFragment : Fragment() {
 
     private lateinit var binding: FragmentLoginBinding
     private lateinit var appPreferences: AppPreferences
+    private val viewModel: LoginViewModel by viewModels()
 
     private var nameInput = ""
     private var emailInput = ""
@@ -42,6 +50,19 @@ class LoginFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initViews()
+        setupEventObserver()
+    }
+
+    private fun setupEventObserver() {
+        lifecycleScope.launchWhenStarted {
+            viewModel.eventFlow.collectLatest { event ->
+                when(event) {
+                    is LoginViewModel.UIEvent.ShowSnackbar -> {
+                        Snackbar.make(binding.root, event.message, Snackbar.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        }
     }
 
     private fun checkInputs(): Boolean {
@@ -113,16 +134,19 @@ class LoginFragment : Fragment() {
         binding.btnProceed.setOnClickListener {
             if (checkInputs()) {
                 CoroutineScope(Dispatchers.IO).launch {
-                    withContext(Dispatchers.IO) {
-                        appPreferences.saveAuthForm(
-                            authenticationModel = AuthenticationModel(
-                                name = nameInput,
-                                email = emailInput,
-                                consumerKey = consumerKeyInput,
-                                consumerSecret = consumerSecretInput
-                            )
-                        )
-                    }
+                    val authenticationModel = AuthenticationModel(
+                        name = nameInput,
+                        email = emailInput,
+                        consumerKey = consumerKeyInput,
+                        consumerSecret = consumerSecretInput
+                    )
+                    viewModel.performLogin(
+                        authenticationModel,
+                        Constants.USER_COLLECTION
+                    )
+                    appPreferences.saveAuthForm(
+                        authenticationModel = authenticationModel
+                    )
                 }
                 findNavController().navigate(
                     R.id.action_loginFragment_to_productListFragment,

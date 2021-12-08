@@ -8,6 +8,7 @@ class Constants {
         const val CONSUMER_SECRET = "consumer_secret"
         const val NAME = "name"
         const val EMAIL = "email"
+        const val USER_COLLECTION = "user_collection"
 
         const val ERROR_EMPTY_NAME = "Name is required"
         const val ERROR_EMPTY_EMAIL = "Email is required"
