@@ -26,7 +26,9 @@ import kotlinx.coroutines.flow.collectLatest
 @AndroidEntryPoint
 class LoginFragment : Fragment() {
 
-    private lateinit var binding: FragmentLoginBinding
+//    private lateinit var binding: FragmentLoginBinding
+    private var _binding: FragmentLoginBinding? = null
+    private val binding get() = _binding!!
     private lateinit var appPreferences: AppPreferences
     private val viewModel: LoginViewModel by viewModels()
 
@@ -40,7 +42,7 @@ class LoginFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentLoginBinding.inflate(layoutInflater)
+        _binding = FragmentLoginBinding.inflate(layoutInflater, container, false)
         activity?.let {
             appPreferences = AppPreferences(it)
         }
@@ -159,6 +161,11 @@ class LoginFragment : Fragment() {
             }
 
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
 }

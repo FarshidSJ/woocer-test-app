@@ -19,7 +19,8 @@ import kotlinx.coroutines.flow.collectLatest
 @AndroidEntryPoint
 class ProductListFragment : Fragment() {
 
-    private lateinit var _binding : FragmentProductListBinding
+    private var _binding : FragmentProductListBinding? = null
+    private val binding get() = _binding!!
     private lateinit var productListAdapter: ProductListAdapter
     private val viewModel: ProductListViewModel by viewModels()
     private lateinit var args: Bundle
@@ -31,9 +32,9 @@ class ProductListFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = FragmentProductListBinding.inflate(layoutInflater)
+        _binding = FragmentProductListBinding.inflate(layoutInflater, container, false)
         initArgs()
-        return _binding.root
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -59,7 +60,7 @@ class ProductListFragment : Fragment() {
             viewModel.eventFlow.collectLatest { event ->
                 when(event) {
                     is ProductListViewModel.UIEvent.ShowSnackbar -> {
-                        Snackbar.make(_binding.root, event.message, Snackbar.LENGTH_SHORT).show()
+                        Snackbar.make(binding.root, event.message, Snackbar.LENGTH_SHORT).show()
                     }
                 }
             }
@@ -76,14 +77,14 @@ class ProductListFragment : Fragment() {
     }
 
     private fun initViews() {
-        _binding.imgBack.setOnClickListener {
+        binding.imgBack.setOnClickListener {
             findNavController().navigateUp()
         }
     }
 
     private fun initAdapter() {
         productListAdapter = ProductListAdapter()
-        _binding.rvProducts.apply {
+        binding.rvProducts.apply {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
             adapter = productListAdapter
         }
@@ -91,10 +92,15 @@ class ProductListFragment : Fragment() {
 
     private fun showLoading(showLoading: Boolean) {
         if (showLoading) {
-            _binding.lottieLoading.visibility = View.VISIBLE
+            binding.lottieLoading.visibility = View.VISIBLE
         } else {
-            _binding.lottieLoading.visibility = View.GONE
+            binding.lottieLoading.visibility = View.GONE
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
 }
